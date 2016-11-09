@@ -1,5 +1,5 @@
 function vecx2 = VecRetainDim(x,varargin)
-% make 2 x n matrix by vectorising around a dimention of x
+% make 2D matrix by vectorising around a dimention of x, which is n-dimensional.
 % reverse using spm_unvec if vec dim 1, e.g.
 %  X = spm_unvec(VecRetainDim(X,1),X)
 % AS 2015
