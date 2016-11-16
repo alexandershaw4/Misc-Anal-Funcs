@@ -14,6 +14,9 @@ end
 
 if length(n) > 1
     for i = 1:length(n)
+        if i > 1; fprintf(repmat('\b',[1,length(str)])); end
+        str = sprintf('decomposing %d of %d',i,length(n));
+        fprintf(str);
         y(i,:) = PEig(x,n(i));
     end
     return
