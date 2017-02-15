@@ -23,3 +23,4 @@ while n > d
 end
 
 fprintf('Finished after %d cycles\n',ncyc);
+y = x;
