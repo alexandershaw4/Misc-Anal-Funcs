@@ -8,9 +8,10 @@ function PCSD(X,Y,varargin)
 %           PCSD(X,Y,'real'); % real part only 
 % AS
 
-try Y                                 ; catch Y = 0;      end
-try s = eval(['@' lower(varargin{1})]); catch s = @real;  end
-
+try Y                                  ; catch Y  = X*0;    end
+try s  = eval(['@' lower(varargin{1})]); catch s  = @real;  end
+try Hz = varargin{2}                   ; catch Hz = 1:size(X,1); end 
+if  isempty(Y); Y = X*0; end
 
 f = @(x,s,m,n)squeeze(s(x(:,m,n)));
 
@@ -24,9 +25,9 @@ for m = 1:p
         end
         b = b + 1;
         subplot(p,p,b);
-        plot(f(X,s,m,n),cl); hold on;
-        plot(f(Y,s,m,n),'r');
-        
+        plot(Hz,f(X,s,m,n),cl); hold on;
+        plot(Hz,f(Y,s,m,n),'r');
+        xlim([Hz(1) Hz(end)]);
     end
 end
         

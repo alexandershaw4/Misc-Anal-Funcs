@@ -11,32 +11,32 @@ function [m,w] = WarpingPath(varargin)
 
 % DEMO
 %--------------------------------
-try varargin{1} == 'demo';
-    x=[ 0.5405    0.2304;
-       -1.4449    0.4990;
-       -0.9677   -1.2205;
-        0.2021   -0.8072;
-       -0.3479    0.2058;
-        1.2901   -0.2704;
-        1.3412    1.1481;
-       -0.5808    1.1923;
-        0.8751   -0.4721;
-        1.3954    0.7887];
-    y = x(:,2);
-    x = x(:,1);
-    t = 1:length(x);
-    
-    [m,w] = WarpingPath(x,y);
-    dx = w*x;
-    dy = w*y;
-    
-    figure,
-    subplot(1,4,1),plot(t, x,t, y);
-    subplot(1,4,4),plot(t,dx,t,dy);
-    subplot(1,4,2),imagesc(m);
-    subplot(1,4,3),imagesc(logical(w));
-    return;
-end
+% try varargin{1} == 'demo';
+%     x=[ 0.5405    0.2304;
+%        -1.4449    0.4990;
+%        -0.9677   -1.2205;
+%         0.2021   -0.8072;
+%        -0.3479    0.2058;
+%         1.2901   -0.2704;
+%         1.3412    1.1481;
+%        -0.5808    1.1923;
+%         0.8751   -0.4721;
+%         1.3954    0.7887];
+%     y = x(:,2);
+%     x = x(:,1);
+%     t = 1:length(x);
+%     
+%     [m,w] = WarpingPath(x,y);
+%     dx = w*x;
+%     dy = w*y;
+%     
+%     figure,
+%     subplot(1,4,1),plot(t, x,t, y);
+%     subplot(1,4,4),plot(t,dx,t,dy);
+%     subplot(1,4,2),imagesc(m);
+%     subplot(1,4,3),imagesc(logical(w));
+%     return;
+% end
 
 
 
@@ -64,26 +64,25 @@ if nargout == 1; m = E; return; end
 
 % expansion point
 P = E(1,1); P;
+C = 0;
+V = 0;
 
-% unique matrix
-Q = toeplitz(fliplr(100*TSNorm(1:length(E))));
-Q = Q+1e-7;
+Coo = [1,1];
 
 xl1   = xl;
 for i = 2:xl*.5*xl
     j = i;
     
-    % find current co-ordinate
-    if i ~= 2; [fx fy] = find(E==v); 
-    else       [fx fy] = deal(1);
-    end        
+    % update current co-ordinate
+     fx = Coo(1); fy = Coo(2);
     
-    % in case of matrix duplicates
-    if length(fx) > 1 || length(fy) > 1
-        fx       = fx(1); 
-        fy       = fy(1);
-        E(fx,fy) = NaN;
-    end
+    
+%     % in case of matrix duplicates
+%     if length(fx) > 1 || length(fy) > 1
+%         fx       = fx(1); 
+%         fy       = fy(1);
+%         E(fx,fy) = NaN;
+%     end
     
     % check for matrix completion
     if size(P,2) == xl1 || size(P,1) == xl1;
@@ -103,12 +102,19 @@ for i = 2:xl*.5*xl
         elseif fy > fx; choice{3} = Inf;
         end
     end
-        
+     
+
     % select minimum distance & log
     [v,op] = min(spm_vec(choice));
     C(i)   = op; 
     V(i)   = v; 
 
+    % new coordinates
+    if     op == 1; Coo(1) = Coo(1) + 1;
+    elseif op == 2; Coo = Coo + 1;
+    elseif op == 3; Coo(2) = Coo(2) + 1;
+    end
+    
     % record value [in situ]    
     if     op == 1;           P(fx+1,fy  ) = v; 
     elseif op == 2 && i ~= 2; 
@@ -118,14 +124,11 @@ for i = 2:xl*.5*xl
     elseif op == 2 && i == 2; P(fx+1,fy+1) = v;
     elseif op == 3;           P(fx  ,fy+1) = v; 
     end
-    
-    % print
-    %P 
-    %pause(.1);
+
     
 end
 
-clc; logical(P);
+%clc; logical(P);
 
 m = E;
 w = P;
