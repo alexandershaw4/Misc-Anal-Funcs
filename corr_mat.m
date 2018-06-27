@@ -1,10 +1,12 @@
-function r = corr_mat(x)
+function r = corr_mat(x,permute)
 % Input full double matrix, x, to plot correlation matrix and return
 % corresponding r and p values in structure. Diagonals are histograms with
 % std normal fit line (help histfit). 
 % Non diagonals are scatters (p<.05 = red)
 %
 % AS2016
+
+if nargin < 2; permute = 0; end
 
 [~,xi] = size(x);
 npl    = xi*(xi-1);
@@ -20,7 +22,13 @@ for i  = 1:xi
         else       Y = x(:,j);
         end;       n = n + 1;
         
-        [R,p] = corr(X,Y);
+        if ~permute
+            [R,p] = corr(X,Y);
+        else
+            Res = kRandCorr(X,Y,0.05,permute,'Pearson');
+            R = Res.rseries_corr;
+            p = Res.pseries_corr;
+        end
         
         subplot(xi,xi,n),
         if i == j; histfit(X); [R,p]=deal(0);

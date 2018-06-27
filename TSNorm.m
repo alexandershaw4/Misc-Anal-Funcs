@@ -42,7 +42,7 @@ end
 %--------------------------
 try varargin{3}; catch varargin{3} = 0; end
 
-if  varargin{3} ~= 1   
+if  varargin{3} ~= 1 
     % vectorise and normalise against one constant
     s = x;
     x = spm_vec(x);
@@ -89,7 +89,9 @@ switch t
     case 'minusone';
         
     % scale [-1 1]
-    y = (x-mean(x))/max(x);
+    %y = (x-mean(x))/max(x);
+    n = 1;
+    y = -n + (abs(n)*2).*(x - min(x))./(max(x) - min(x));  
     
     case 'between';
     
