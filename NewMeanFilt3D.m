@@ -1,4 +1,4 @@
-function y = NewMeanFilt3D(M,m)
+function y = NewMeanFilt3D(M,m1,m2,m3)
 % Mean window filtering for 3D matrices
 %
 % 
@@ -9,7 +9,11 @@ function y = NewMeanFilt3D(M,m)
 if ndims(M) > 3; fprintf('Too many dimensions!\n'); return; end
 if ndims(M) < 3; fprintf('Too few dimensions!\n'); return; end
 
-y = smoothmat3(M,m,m,m);
+if nargin < 4
+    [m2, m3] = deal(m1);
+end
+
+y = smoothmat3(M,m1,m2,m3);
 
 end
 

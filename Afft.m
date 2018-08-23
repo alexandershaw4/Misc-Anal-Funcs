@@ -3,7 +3,7 @@ function [Pf,f] = Afft(signal,fs,varargin)
 % Include desired frequency vector to return spline interpolated F and Pf.
 %
 % Use:  [Pf,f] = Afft(signal,fs)          % signal at fs (1/dt)
-%       [Pf,f] = Afft(signal,fs,[1 100]); % spline interp'd FoI
+%       [Pf,f] = Afft(signal,fs,[1:100]); % spline interp'd FoI
 %
 % AS
 
